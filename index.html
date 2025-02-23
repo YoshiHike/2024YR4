@@ -1,49 +1,77 @@
-<!DOCTYPE HTML>
+<!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>Countdown</title>
 <style>
-p {
-  text-align: center;
-  font-size: 60px;
-  margin-top: 0px;
-}
+  html, body {
+      height: 100%;
+      margin: 0;
+    }
+  .container {
+      display: grid;
+      place-items: center;
+      height: 100%;
+      width: 100%;
+    }
+  p {
+    text-align: center;
+    font-size: 60px;
+    margin-top: 0px;
+  }
 </style>
 </head>
+<div class="container">
+  <p id="countdown"></p>
+</div>
 <body>
+    <script>
+    	const JudgmentDay = new Date("Dec 22, 2032 13:13:13");
+        const countElement = document.getElementById("countdown");
 
-<p id="demo"></p>
+        function startCountdown(JudgmentDay, element) {
+            function updateCountdown() {
+                const dateNow = new Date();
+                const diff = JudgmentDay - dateNow;
+                if (diff <= 0) {
+                    clearInterval(intervalo);
+                    element.innerHTML = "¡END!";
+                    return;
+                }
 
-<script>
-// Set the date we're counting down to
-var countDownDate = new Date("Jan 5, 2030 15:37:25").getTime();
+                let years = JudgmentDay.getFullYear() - dateNow.getFullYear();
+                let month = JudgmentDay.getMonth() - dateNow.getMonth();
+                let days = JudgmentDay.getDate() - dateNow.getDate();
+                let hours = JudgmentDay.getHours() - dateNow.getHours();
+                let minutes = JudgmentDay.getMinutes() - dateNow.getMinutes();
+                let seconds = JudgmentDay.getSeconds() - dateNow.getSeconds();
 
-// Update the count down every 1 second
-var x = setInterval(function() {
-
-  // Get today's date and time
-  var now = new Date().getTime();
-    
-  // Find the distance between now and the count down date
-  var distance = countDownDate - now;
-    
-  // Time calculations for days, hours, minutes and seconds
-  var days = Math.floor(distance / (1000 * 60 * 60 * 24));
-  var hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-  var minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-  var seconds = Math.floor((distance % (1000 * 60)) / 1000);
-    
-  // Output the result in an element with id="demo"
-  document.getElementById("demo").innerHTML = days + "d " + hours + "h "
-  + minutes + "m " + seconds + "s ";
-    
-  // If the count down is over, write some text 
-  if (distance < 0) {
-    clearInterval(x);
-    document.getElementById("demo").innerHTML = "EXPIRED";
-  }
-}, 1000);
-</script>
-
+                if (seconds < 0) {
+                    seconds += 60;
+                    minutes--;
+                }
+                if (minutes < 0) {
+                    minutes += 60;
+                    hours--;
+                }
+                if (hours < 0) {
+                    hours += 24;
+                    days--;
+                }
+                if (days < 0) {
+                    const lastDayofPreviousMonth = new Date(dateNow.getFullYear(), dateNow.getMonth(), 0).getDate();
+                    days += lastDayofPreviousMonth;
+                    month--;
+                }
+                if (month < 0) {
+                    month += 12;
+                    years--;
+                }
+                element.innerHTML = `${years}Y ${month}M ${days}D ${hours}h ${minutes}m ${seconds}s`;
+            }
+            updateCountdown();
+            const intervalo = setInterval(updateCountdown, 1000);
+        }
+        startCountdown(JudgmentDay, countElement);
+    </script>
 </body>
 </html>
